@@ -7,7 +7,7 @@ app.use(express.urlencoded({extended: true}))
 const {getUsers, getUserById, putUserById, createUser} = require('./src/teste');
 
 app.get('/', (req, res) => {
-    res.send('Olá, este é o endereço raiz');
+    res.send('Olá, este é o local host');
 });
 
 app.get('/api/v1/users', async (req, res) => {
@@ -26,6 +26,6 @@ app.post('/api/v1/users', async (req, res) => {
     res.json(await createUser(req.body));
 });
 
-app.listen(4010, () => {
-    console.log('Listening on port ' + chalk.green('4010'));
+app.listen(3000, () => {
+    console.log('Listening on port ' + chalk.green('3000'));
 });

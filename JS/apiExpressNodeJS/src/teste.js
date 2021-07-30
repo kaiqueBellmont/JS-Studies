@@ -1,20 +1,16 @@
 const {request} = require('express');
 const data = require('../mock_data.json');
 const fs = require("fs");
+const { error } = require('console');
+const { body, validationResult } = require('express-validator');
+const { on } = require('events');
+const { json } = require('body-parser');
+
 
 
 async function getUsers() {
     return new Promise((resolve, reject) => {
         resolve(data);
-    })
-}
-
-async function createUser(userData) {
-    return new Promise((resolve, reject) => {
-        userData.id = data.length + 1 + ""
-        data.push(userData)
-        resolve(userData);
-        fs.writeFileSync('mock_data.json', JSON.stringify(data, null, "\t"));
     })
 }
 
@@ -25,6 +21,21 @@ async function getUserById(id_user) {
                 resolve(item);
             }
         }
+    })
+}
+
+async function createUser(userData) {
+    return new Promise((resolve, reject) => {
+        let completeData = 
+            [userData.id = data.length + 1 + "",
+            userData.first_name = userData.first_name ? userData.first_name : null,
+            userData.last_name = userData.last_name ? userData.last_name : null,
+            userData.email = userData.email ? userData.email : null,
+            userData.gender = userData.gender ? userData.gender : null,
+            userData.ip_address = userData.ip_address ? userData.ip_address : null,]
+            json.completeData
+        resolve(completeData);
+        fs.writeFileSync('mock_data.json', JSON.stringify(data, null, "\t"));
     })
 }
 
