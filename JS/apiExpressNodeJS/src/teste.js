@@ -1,12 +1,58 @@
+/*
+Exemplos de request:
+    O servićo espera o que para executar
+    * Existe filtros ou campos não obrigatório?
+    * São dados primários para exeućão do GET?
+        ID, Login, senha, etc
+    
+    Exemplo: Login
+        Espera:
+            Login e senha
+        Exemplo de servićo:
+            login(login, senha){...}
+        Exemplo de requisićão:
+            URL: /login
+            BODY: {id_platform: .., login: .., senha: ..}
+        Exemplo de controller:
+            login_service.login(req.body.login, req.body.senha)
+
+
+    Exemplo: Listar usuário
+        Espera:
+            filtros, página e limite
+        Exemplo de servićo:
+            listUsers(page, limit, filters){...}
+        Exemplo de requisićão:
+            URL: /login
+            query: {page: .., limit: .., filters: {}}
+        Exemplo de controller:
+            login_service.login(req.body.page, req.body.limit, page.body.filters)
+
+
+*/
+
+
+
 const {request} = require('express');
 const data = require('../mock_data.json');
 const fs = require("fs");
 const { error } = require('console');
-const { body, validationResult } = require('express-validator');
+const { body, validationResult, check } = require('express-validator');
 const { on } = require('events');
-const { json } = require('body-parser');
+const e = require('express');
+const chalk = require('chalk');
 
 
+const campoVazio = "ERRO: Este campo deve ser preenchido"
+
+async function getUsersV2(page = null, limit = null) {
+    page = !page || page < 1 ? 1 : page
+    limit = limit > 10 ? 10 : limit
+    
+    return new Promise((resolve, reject) => {
+        resolve(data);
+    })
+}
 
 async function getUsers() {
     return new Promise((resolve, reject) => {
@@ -26,15 +72,26 @@ async function getUserById(id_user) {
 
 async function createUser(userData) {
     return new Promise((resolve, reject) => {
-        let completeData = 
-            [userData.id = data.length + 1 + "",
-            userData.first_name = userData.first_name ? userData.first_name : null,
-            userData.last_name = userData.last_name ? userData.last_name : null,
-            userData.email = userData.email ? userData.email : null,
-            userData.gender = userData.gender ? userData.gender : null,
-            userData.ip_address = userData.ip_address ? userData.ip_address : null,]
-            json.completeData
-        resolve(completeData);
+        userData.id = data.length + 1 + ""
+        userData.first_name = userData.first_name ? userData.first_name : campoVazio
+        userData.last_name = userData.last_name ? userData.last_name : campoVazio
+        userData.email = userData.email ? userData.email : campoVazio
+        userData.gender = userData.gender ? userData.gender : campoVazio
+        userData.ip_address = userData.ip_address ? userData.ip_address : campoVazio
+
+        
+
+        console.log(Object.values(userData))
+        // for(value of Object.values(userData)){
+        //     if(value == campoVazio){
+        //         break
+        //     }
+        // }console.log(userData)
+        
+        console.log(Object(userData))
+        
+        console.log(userData)
+        resolve(userData);
         fs.writeFileSync('mock_data.json', JSON.stringify(data, null, "\t"));
     })
 }
